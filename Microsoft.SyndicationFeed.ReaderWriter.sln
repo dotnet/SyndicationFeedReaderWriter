@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.SyndicationFeed", "src\Microsoft.SyndicationFeed.csproj", "{E8A15170-9B9F-4A6E-9FE8-8C694EB2B123}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.SyndicationFeed.ReaderWriter", "src\Microsoft.SyndicationFeed.ReaderWriter.csproj", "{E8A15170-9B9F-4A6E-9FE8-8C694EB2B123}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.SyndicationFeed.Tests", "tests\Microsoft.SyndicationFeed.Tests.csproj", "{CA320B78-D2F8-4A52-9EC3-F8D2D1F19B4F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.SyndicationFeed.ReaderWriter.Tests", "tests\Microsoft.SyndicationFeed.ReaderWriter.Tests.csproj", "{CA320B78-D2F8-4A52-9EC3-F8D2D1F19B4F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.SyndicationFeed.Examples", "examples\Microsoft.SyndicationFeed.Examples.csproj", "{8ACF4B68-18C3-4835-9E21-812B4E109334}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.SyndicationFeed.ReaderWriter.Examples", "examples\Microsoft.SyndicationFeed.ReaderWriter.Examples.csproj", "{8ACF4B68-18C3-4835-9E21-812B4E109334}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
