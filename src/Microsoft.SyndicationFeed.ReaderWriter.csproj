@@ -3,12 +3,9 @@
   
   <PropertyGroup>
     <VersionPrefix>1.0.0</VersionPrefix>
-    <VersionSuffix>preview</VersionSuffix>
     <TargetFramework>netstandard1.3</TargetFramework>
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
     <PackagingToolsInsufficientSDKVersion>false</PackagingToolsInsufficientSDKVersion>
-    <Summary>Microsoft.SyndicationFeed.ReaderWriter provides lightweight forward-only read/write APIs to simplify operations with RSS and Atom syndication feeds</Summary>
-    <Description>Microsoft.SyndicationFeed.ReaderWriter provides lightweight forward-only read/write APIs (similar to .NET XmlReader) to simplify operations with RSS and Atom syndication feeds. It offers extensiblity to support custom feed elements and formatting. The workflow is async on demand, which enables this library to be used on syndication feeds of arbitrary size or stream latency.</Description>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MicroBuild.Core" Version="$(MicroBuildVersion)" />
