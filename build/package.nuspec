@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Microsoft.SyndicationFeed.ReaderWriter</id>
+    <version>1.0.0</version>
+    <authors>Microsoft</authors>
+    <owners>Dotnet</owners>
+    <licenseUrl>https://github.com/dotnet/SyndicationFeedReaderWriter/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/dotnet/SyndicationFeedReaderWriter</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>Microsoft.SyndicationFeed.ReaderWriter provides lightweight forward-only read/write APIs to simplify operations with RSS and Atom syndication feeds</summary>
+    <description>Microsoft.SyndicationFeed.ReaderWriter provides lightweight forward-only read/write APIs (similar to .NET XmlReader) to simplify operations with RSS and Atom syndication feeds. It offers extensiblity to support custom feed elements and formatting. The workflow is async on demand, which enables this library to be used on syndication feeds of arbitrary size or stream latency.</description>
+    <copyright>Copyright 2017</copyright>
+    <tags>SyndicationFeed RSS Atom</tags>
+    <dependencies>
+      <group targetFramework="netstandard1.3">
+        <dependency id="System.Globalization" version="4.3.0" />
+        <dependency id="System.Linq" version="4.3.0" />
+        <dependency id="System.Runtime.Extensions" version="4.3.0" />
+        <dependency id="System.Xml.ReaderWriter" version="4.3.0" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\src\bin\Release\netstandard1.3\Microsoft.SyndicationFeed.ReaderWriter.dll" target="lib\netstandard1.3" />
+  </files>
+</package>

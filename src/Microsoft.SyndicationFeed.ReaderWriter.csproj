@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\build\sign.props" />
+  
+  <PropertyGroup>
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <TargetFramework>netstandard1.3</TargetFramework>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <PackagingToolsInsufficientSDKVersion>false</PackagingToolsInsufficientSDKVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MicroBuild.Core" Version="$(MicroBuildVersion)" />
+    <PackageReference Include="System.Globalization" Version="4.3.0" />
+    <PackageReference Include="System.Linq" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.Extensions" Version="4.3.0" />
+    <PackageReference Include="System.Xml.ReaderWriter" Version="4.3.0" />
+  </ItemGroup>
+</Project>
