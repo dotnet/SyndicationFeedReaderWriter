@@ -22,7 +22,7 @@ Examples can be found [here](examples).
 ```
 using (var xmlReader = XmlReader.Create(filePath, new XmlReaderSettings() { Async = true }))
 {
-    var feedReader = new Rss20FeedReader(xmlReader);
+    var feedReader = new RssFeedReader(xmlReader);
 
     while(await feedReader.Read())
     {
@@ -67,19 +67,19 @@ using (var xmlReader = XmlReader.Create(filePath, new XmlReaderSettings() { Asyn
 var sw = new StringWriter();
 using (XmlWriter xmlWriter = XmlWriter.Create(sw, new XmlWriterSettings() { Async = true, Indent = true }))
 {
-    var writer = new Rss20FeedWriter(xmlWriter);
+    var writer = new RssFeedWriter(xmlWriter);
       
     // Create item
     var item = new SyndicationItem()
     {
         Title = "Rss Writer Avaliable",
         Description = "The new Rss Writer is now available as a NuGet Package!",
-        Id = "https://www.nuget.org/packages/Microsoft.SyndicationFeed",
+        Id = "https://www.nuget.org/packages/Microsoft.SyndicationFeed.ReaderWriter",
         Published = DateTimeOffset.UtcNow
     };
 
     item.AddCategory(new SyndicationCategory("Technology"));
-    item.AddContributor(new SyndicationPerson(null, "test@mail.com"));
+    item.AddContributor(new SyndicationPerson("test", "test@mail.com"));
 
     await writer.Write(item);
     xmlWriter.Flush();
