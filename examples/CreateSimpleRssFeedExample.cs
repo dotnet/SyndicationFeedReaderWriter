@@ -24,15 +24,15 @@ class CreateSimpleRssFeed
 
             //
             // Add Title
-            await writer.WriteTitle("Example of Rss20FeedWriter");
+            await writer.WriteTitle("Example of RssFeedWriter");
 
             //
             // Add Description
-            await writer.WriteDescription("Hello World, RSS!");
+            await writer.WriteDescription("Hello World, RSS 2.0!");
 
             //
             // Add Link
-            await writer.Write(new SyndicationLink(new Uri("https://github.com/dotnet/wcf")));
+            await writer.Write(new SyndicationLink(new Uri("https://github.com/dotnet/SyndicationFeedReaderWriter")));
 
             //
             // Add managing editor
@@ -57,15 +57,15 @@ class CreateSimpleRssFeed
             {
                 var item = new SyndicationItem()
                 {
-                    Id = "https://www.nuget.org/packages/Microsoft.SyndicationFeed",
+                    Id = "https://www.nuget.org/packages/Microsoft.SyndicationFeed.ReaderWriter",
                     Title = $"Item #{i + 1}",
-                    Description = "The new RSS Writer is available as a NuGet package!",
+                    Description = "The new Microsoft.SyndicationFeed.ReaderWriter is now available as a NuGet package!",
                     Published = DateTimeOffset.UtcNow
                 };
 
-                item.AddLink(new SyndicationLink(new Uri("https://github.com/dotnet/wcf")));
+                item.AddLink(new SyndicationLink(new Uri("https://github.com/dotnet/SyndicationFeedReaderWriter")));
                 item.AddCategory(new SyndicationCategory("Technology"));
-                item.AddContributor(new SyndicationPerson(null, "user@contoso.com", RssContributorTypes.Author));
+                item.AddContributor(new SyndicationPerson("user", "user@contoso.com"));
 
                 await writer.Write(item);
             }
