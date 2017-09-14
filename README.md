@@ -19,7 +19,7 @@ Microsoft.SyndicationFeed.ReaderWriter provides lightweight forward-only read/wr
 Examples can be found [here](examples).
 
 ### Create an RssReader and Read a Feed ###
-```
+```cs
 using (var xmlReader = XmlReader.Create(filePath, new XmlReaderSettings() { Async = true }))
 {
     var feedReader = new RssFeedReader(xmlReader);
@@ -63,7 +63,7 @@ using (var xmlReader = XmlReader.Create(filePath, new XmlReaderSettings() { Asyn
 ```
 
 ### Create an RssWriter and Write an Rss Item ###
-```
+```cs
 var sw = new StringWriter();
 using (XmlWriter xmlWriter = XmlWriter.Create(sw, new XmlWriterSettings() { Async = true, Indent = true }))
 {
