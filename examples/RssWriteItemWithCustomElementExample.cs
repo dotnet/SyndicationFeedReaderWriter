@@ -48,7 +48,7 @@ class RssWriteItemWithCustomElement
             var content = new SyndicationContent(formatter.CreateContent(item));
 
             // Add custom fields/attributes
-            content.AddField(new SyndicationContent("example:customElement", ExampleNs, "Custom Value"));
+            content.AddField(new SyndicationContent("customElement", ExampleNs, "Custom Value"));
 
             // Write 
             await writer.Write(content);
