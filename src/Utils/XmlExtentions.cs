@@ -2,74 +2,36 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Xml;
 
 namespace Microsoft.SyndicationFeed
 {
     static class XmlExtentions
     {
-        public static ISyndicationContent ReadSyndicationContent(this XmlReader reader)
+        public static ISyndicationAttribute ReadSyndicationAttribute(this XmlReader reader)
         {
-            var content = new SyndicationContent(reader.Name, reader.NamespaceURI, null);
-
-            //
-            // Attributes
-            if (reader.HasAttributes)
+            if (reader.NodeType != XmlNodeType.Attribute)
             {
-                while (reader.MoveToNextAttribute())
-                {
-                    string ns = reader.NamespaceURI;
-                    string name = reader.Name;
-
-                    if (XmlUtils.IsXmlns(name, ns) || XmlUtils.IsXmlSchemaType(name, ns))
-                    {
-                        continue;
-                    }
-
-                    content.AddAttribute(new SyndicationAttribute(name, ns, reader.Value));
-                }
-
-                reader.MoveToContent();
+                throw new InvalidOperationException("Invalid Xml Attribute");
             }
 
-            //
-            // Content
-            if (!reader.IsEmptyElement)
-            {
-                reader.ReadStartElement();
+            string ns = reader.NamespaceURI;
+            string name = reader.Name;
 
-                //
-                // Value
-                if (reader.HasValue)
-                {
-                    content.Value = reader.ReadContentAsString();
-                }
-                //
-                // Children
-                else
-                {
-                    while (reader.IsStartElement())
-                    {
-                        content.AddField(reader.ReadSyndicationContent());
-                    }
-                }
-
-                reader.ReadEndElement(); // end
-            }
-            else
+            if (XmlUtils.IsXmlns(name, ns) || XmlUtils.IsXmlSchemaType(name, ns))
             {
-                reader.Skip();
+                return null;
             }
 
-            return content;
+            return new SyndicationAttribute(name, ns, reader.Value);
         }
 
-        public static void WriteSyndicationContent(this XmlWriter writer, ISyndicationContent content, string defaultNs)
+
+        public static void WriteStartSyndicationContent(this XmlWriter writer, ISyndicationContent content, string defaultNs)
         {
             string ns = content.Namespace ?? defaultNs;
 
-            //
-            // Write opening 
             if (ns != null)
             {
                 XmlUtils.SplitName(content.Name, out string prefix, out string localName);
@@ -89,61 +51,84 @@ namespace Microsoft.SyndicationFeed
             {
                 writer.WriteStartElement(content.Name);
             }
-
-            //
-            // Write attributes
-            if (content.Attributes != null)
-            {
-                foreach (var a in content.Attributes)
-                {
-                    writer.WriteSyndicationAttribute(a);
-                }
-            }
-
-            //
-            // Write value
-            if (content.Value != null)
-            {
-                writer.WriteString(content.Value);
-            }
-            //
-            // Write Fields
-            else
-            {
-                if (content.Fields != null)
-                {
-                    foreach (var field in content.Fields)
-                    {
-                        writer.WriteSyndicationContent(field, defaultNs);
-                    }
-                }
-            }
-
-            //
-            // Write closing 
-            writer.WriteEndElement();
         }
 
         public static void WriteSyndicationAttribute(this XmlWriter writer, ISyndicationAttribute attr)
         {
             XmlUtils.SplitName(attr.Name, out string prefix, out string localName);
 
-            prefix = prefix ?? writer.LookupPrefix(attr.Namespace ?? string.Empty);
+            writer.WriteAttribute(prefix, attr.Name, localName, attr.Namespace, attr.Value);
+        }
+
+        public static void WriteXmlFragment(this XmlWriter writer, string fragment, string defaultNs)
+        {
+            using (var reader = XmlUtils.CreateXmlReader(fragment))
+            {
+                reader.MoveToContent();
+
+                while (!reader.EOF)
+                {
+                    string ns = !string.IsNullOrEmpty(reader.NamespaceURI) ? reader.NamespaceURI : defaultNs;
+
+                    //
+                    // Start Element
+                    if (reader.NodeType == XmlNodeType.Element)
+                    {
+                        writer.WriteStartElement(reader.LocalName, ns);
+
+                        if (reader.HasAttributes)
+                        {
+                            while (reader.MoveToNextAttribute())
+                            {
+                                writer.WriteAttribute(reader.Prefix, reader.Name, reader.LocalName, ns, reader.Value);
+                            }
+
+                            reader.MoveToContent();
+                        }
+
+                        if (reader.IsEmptyElement)
+                        {
+                            writer.WriteEndElement();
+                        }
+
+                        reader.Read();
+                        continue;
+                    }
+
+                    //
+                    // End Element
+                    if (reader.NodeType == XmlNodeType.EndElement)
+                    {
+                        writer.WriteEndElement();
+                        reader.Read();
+                        continue;
+                    }
+
+                    //
+                    // Copy Content
+                    writer.WriteNode(reader, false);
+                }
+            }
+        }
+
+        private static void WriteAttribute(this XmlWriter writer, string prefix, string name, string localName, string ns, string value)
+        {
+            prefix = prefix ?? writer.LookupPrefix(ns ?? string.Empty);
 
             if (prefix == string.Empty)
             {
-                writer.WriteStartAttribute(attr.Name);
+                writer.WriteStartAttribute(name);
             }
             else if (prefix != null)
             {
-                writer.WriteStartAttribute(prefix, localName, attr.Namespace);
+                writer.WriteStartAttribute(prefix, localName, ns);
             }
             else
             {
-                writer.WriteStartAttribute(localName, attr.Namespace);
+                writer.WriteStartAttribute(localName, ns);
             }
 
-            writer.WriteString(attr.Value);
+            writer.WriteString(value);
             writer.WriteEndAttribute();
         }
     }

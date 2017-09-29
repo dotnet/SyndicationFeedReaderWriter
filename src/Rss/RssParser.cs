@@ -88,7 +88,7 @@ namespace Microsoft.SyndicationFeed.Rss
             {
                 reader.MoveToContent();
 
-                return reader.ReadSyndicationContent();
+                return ReadSyndicationContent(reader);
             }
         }
 
@@ -333,13 +333,67 @@ namespace Microsoft.SyndicationFeed.Rss
 
             return new SyndicationCategory(content.Value);
         }
+
+        private static ISyndicationContent ReadSyndicationContent(XmlReader reader)
+        {
+            var content = new SyndicationContent(reader.Name, reader.NamespaceURI, null);
+
+            //
+            // Attributes
+            if (reader.HasAttributes)
+            {
+                while (reader.MoveToNextAttribute())
+                {
+                    ISyndicationAttribute attr = reader.ReadSyndicationAttribute();
+
+                    if (attr != null)
+                    {
+                        content.AddAttribute(attr);
+                    }
+                }
+
+                reader.MoveToContent();
+            }
+
+            //
+            // Content
+            if (!reader.IsEmptyElement)
+            {
+                reader.ReadStartElement();
+
+                //
+                // Value
+                if (reader.HasValue)
+                {
+                    content.Value = reader.ReadContentAsString();
+                }
+                //
+                // Children
+                else
+                {
+                    while (reader.IsStartElement())
+                    {
+                        content.AddField(ReadSyndicationContent(reader));
+                    }
+                }
+
+                reader.ReadEndElement(); // end
+            }
+            else
+            {
+                reader.Skip();
+            }
+
+            return content;
+        }
     }
 
     static class RssAttributeExtentions
     {
         public static string GetRss(this IEnumerable<ISyndicationAttribute> attributes, string name)
         {
-            return attributes.FirstOrDefault(a => a.Name == name && a.Namespace == RssConstants.Rss20Namespace)?.Value;
+            return attributes.FirstOrDefault(a => a.Name == name && 
+                                            (a.Namespace == RssConstants.Rss20Namespace || a.Namespace == null))?.Value;
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Microsoft.SyndicationFeed.Atom
 
             try
             {
-                _writer.WriteSyndicationContent(content, AtomConstants.Atom10Namespace);
+                WriteSyndicationContent(content);
 
                 _writer.Flush();
 
@@ -443,6 +443,66 @@ namespace Microsoft.SyndicationFeed.Atom
             }
 
             return result;
+        }
+
+        private void WriteSyndicationContent(ISyndicationContent content)
+        {
+            bool isXhtmlContentType = false;
+
+            //
+            // Write Start
+            _writer.WriteStartSyndicationContent(content, AtomConstants.Atom10Namespace);
+
+            //
+            // Write attributes
+            if (content.Attributes != null)
+            {
+                foreach (var a in content.Attributes)
+                {
+                    if (!isXhtmlContentType && a.Name == AtomConstants.Type && a.Value == AtomConstants.XhtmlContentType)
+                    {
+                        isXhtmlContentType = true;
+                    }
+
+                    _writer.WriteSyndicationAttribute(a);
+                }
+            }
+
+            //
+            // Write value
+            if (content.Value != null)
+            {
+                if (isXhtmlContentType)
+                {
+                    //
+                    // Handle xhtml content
+                    // https://tools.ietf.org/html/rfc4287#section-3.1.1.3
+                    //
+                    _writer.WriteStartElement("div", AtomConstants.XhtmlNamespace);
+                    _writer.WriteXmlFragment(content.Value, AtomConstants.XhtmlNamespace);
+                    _writer.WriteEndElement();
+                }
+                else
+                {
+                    _writer.WriteString(content.Value);
+                }
+            }
+            //
+            // Write Fields
+            else
+            {
+                if (content.Fields != null)
+                {
+                    foreach (var field in content.Fields)
+                    {
+                        WriteSyndicationContent(field);
+                    }
+                }
+            }
+
+            //
+            // Write End
+            _writer.WriteEndElement();
         }
     }
 }

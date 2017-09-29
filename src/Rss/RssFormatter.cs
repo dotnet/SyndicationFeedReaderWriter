@@ -34,7 +34,7 @@ namespace Microsoft.SyndicationFeed.Rss
 
             try
             {
-                _writer.WriteSyndicationContent(content, null);
+                WriteSyndicationContent(content);
 
                 _writer.Flush();
 
@@ -384,6 +384,46 @@ namespace Microsoft.SyndicationFeed.Rss
             }
 
             return content;
+        }
+
+        private void WriteSyndicationContent(ISyndicationContent content)
+        {
+            //
+            // Write Start
+            _writer.WriteStartSyndicationContent(content, null);
+
+            //
+            // Write attributes
+            if (content.Attributes != null)
+            {
+                foreach (var a in content.Attributes)
+                {
+                    _writer.WriteSyndicationAttribute(a);
+                }
+            }
+
+            //
+            // Write value
+            if (content.Value != null)
+            {
+                _writer.WriteString(content.Value);
+            }
+            //
+            // Write Fields
+            else
+            {
+                if (content.Fields != null)
+                {
+                    foreach (var field in content.Fields)
+                    {
+                        WriteSyndicationContent(field);
+                    }
+                }
+            }
+
+            //
+            // Write End
+            _writer.WriteEndElement();
         }
     }
 }
