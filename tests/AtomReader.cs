@@ -122,6 +122,7 @@ namespace Microsoft.SyndicationFeed.Tests.Atom
                         Assert.True(item.Contributors.Count() == 3);
                         Assert.True(item.Rights == "All rights Reserved. Contoso.");
                         Assert.True(item.Id == "tag:example.org,2003:3.2397");
+                        Assert.False(string.IsNullOrEmpty(item.Description));
                     }
                 }
             }

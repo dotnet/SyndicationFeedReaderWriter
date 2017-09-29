@@ -1,11 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:xh="http://www.w3.org/1999/xhtml">
   <title type="text">dive into mark</title>
   <subtitle type="html">
     A &lt;em&gt;lot&lt;/em&gt; of effort
     went into making this effortless
   </subtitle>
-
   <author>
     <name>Mark Pilgrim</name>
     <uri>http://example.org/</uri>
@@ -58,13 +57,11 @@
     </contributor>
     <rights>All rights Reserved. Contoso.</rights>
     <content type="xhtml" xml:lang="en" xml:base="http://diveintomark.org/">
-      <![CDATA[
-      <div>
+      <div xmlns="http://www.w3.org/1999/xhtml">
         <p>
           <i>[Update: The Atom draft is finished.]</i>
         </p>
       </div>
-      ]]>
     </content>
   </entry>
 
@@ -95,14 +92,11 @@
     </contributor>
     <rights>All rights Reserved. Contoso.</rights>
     <content type="xhtml" xml:lang="en" xml:base="http://diveintomark.org/">
-      <![CDATA[
-      <div>
-        <p>
-          <i>[Update: The Atom draft is finished.]</i>
-        </p>
-      </div>
-      ]]>
+      <xh:div>
+        <xh:p>
+          <xh:i>[Update: The Atom draft is finished.]</xh:i>
+        </xh:p>
+      </xh:div>
     </content>
   </entry>
-  
 </feed>

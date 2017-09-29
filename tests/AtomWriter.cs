@@ -280,6 +280,26 @@ namespace Microsoft.SyndicationFeed.Tests.Atom
             Assert.True(res.Contains($"<atom:entry><atom:id>{entry.Id}</atom:id><atom:title>{entry.Title}</atom:title><atom:updated>{entry.LastUpdated.ToString("r")}</atom:updated><atom:author><atom:name>{author.Name}</atom:name><atom:email>{author.Email}</atom:email></atom:author><atom:content>{entry.Description}</atom:content></atom:entry>"));
         }
 
+        [Fact]
+        public async Task WriteXhtmlContent()
+        {
+            var sw = new StringWriterWithEncoding(Encoding.UTF8);
+
+            string content = "<h1><b href=\"foo\">Heading</b><br foo=\"bar\" /></h1><br />";
+
+            using (var xmlWriter = XmlWriter.Create(sw))
+            {
+                var writer = new AtomFeedWriter(xmlWriter);
+
+                await writer.WriteText("content", content, "xhtml");
+
+                await writer.Flush();
+            }
+
+            string res = sw.ToString();
+            Assert.True(CheckResult(res, $"<content type=\"xhtml\"><div xmlns=\"http://www.w3.org/1999/xhtml\">{content}</div></content>"));
+        }
+
         private static bool CheckResult(string result, string expected)
         {
             return result == $"<?xml version=\"1.0\" encoding=\"utf-8\"?><feed xmlns=\"http://www.w3.org/2005/Atom\">{expected}</feed>";

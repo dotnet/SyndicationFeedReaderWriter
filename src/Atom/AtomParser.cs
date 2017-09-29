@@ -87,7 +87,7 @@ namespace Microsoft.SyndicationFeed.Atom
             {
                 reader.MoveToContent();
 
-                return reader.ReadSyndicationContent();
+                return ReadSyndicationContent(reader);
             }
         }
 
@@ -419,13 +419,90 @@ namespace Microsoft.SyndicationFeed.Atom
         {
             return XmlUtils.CreateXmlReader(value);
         }
+
+        private static ISyndicationContent ReadSyndicationContent(XmlReader reader)
+        {
+            bool isXhtmlContentType = false;
+
+            var content = new SyndicationContent(reader.Name, reader.NamespaceURI, null);
+
+            //
+            // Attributes
+            if (reader.HasAttributes)
+            {
+                while (reader.MoveToNextAttribute())
+                {
+                    ISyndicationAttribute attr = reader.ReadSyndicationAttribute();
+
+                    if (attr != null)
+                    {
+                        if (!isXhtmlContentType && attr.Name == AtomConstants.Type && attr.Value == AtomConstants.XhtmlContentType)
+                        {
+                            isXhtmlContentType = true;
+                        }
+
+                        content.AddAttribute(attr);
+                    }
+                }
+
+                reader.MoveToContent();
+            }
+
+            //
+            // Content
+            if (!reader.IsEmptyElement)
+            {
+                reader.ReadStartElement();
+
+                if (isXhtmlContentType)
+                {
+                    //
+                    // Handle xhtml content
+                    // https://tools.ietf.org/html/rfc4287#section-3.1.1.3
+                    //
+                    if (reader.NamespaceURI != AtomConstants.XhmlNamespace)
+                    {
+                        throw new FormatException($"Invalid XHTML namespace");
+                    }
+
+                    content.Value = reader.ReadInnerXml();
+                }
+                else
+                {
+                    //
+                    // Value
+                    if (reader.HasValue)
+                    {
+                        content.Value = reader.ReadContentAsString();
+                    }
+                    //
+                    // Children
+                    else
+                    {
+                        while (reader.IsStartElement())
+                        {
+                            content.AddField(ReadSyndicationContent(reader));
+                        }
+                    }
+                }
+
+                reader.ReadEndElement(); // end
+            }
+            else
+            {
+                reader.Skip();
+            }
+
+            return content;
+        }
     }
 
     static class AtomAttributeExtentions
     {
         public static string GetAtom(this IEnumerable<ISyndicationAttribute> attributes, string name)
         {
-            return attributes.FirstOrDefault(a => a.Name == name && a.Namespace == string.Empty)?.Value;
+            return attributes.FirstOrDefault(a => a.Name == name &&
+                                             (a.Namespace == null || a.Namespace == string.Empty || a.Namespace == AtomConstants.Atom10Namespace))?.Value;
         }
     }
 }
