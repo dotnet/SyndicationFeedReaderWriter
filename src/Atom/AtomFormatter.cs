@@ -478,8 +478,8 @@ namespace Microsoft.SyndicationFeed.Atom
                     // Handle xhtml content
                     // https://tools.ietf.org/html/rfc4287#section-3.1.1.3
                     //
-                    _writer.WriteStartElement("div", AtomConstants.XhmlNamespace);
-                    _writer.WriteXmlFragment(content.Value, AtomConstants.XhmlNamespace);
+                    _writer.WriteStartElement("div", AtomConstants.XhtmlNamespace);
+                    _writer.WriteXmlFragment(content.Value, AtomConstants.XhtmlNamespace);
                     _writer.WriteEndElement();
                 }
                 else

@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Xml;
 
 namespace Microsoft.SyndicationFeed
@@ -10,6 +11,11 @@ namespace Microsoft.SyndicationFeed
     {
         public static ISyndicationAttribute ReadSyndicationAttribute(this XmlReader reader)
         {
+            if (reader.NodeType != XmlNodeType.Attribute)
+            {
+                throw new InvalidOperationException("Invalid Xml Attribute");
+            }
+
             string ns = reader.NamespaceURI;
             string name = reader.Name;
 

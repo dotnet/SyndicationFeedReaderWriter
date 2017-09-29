@@ -460,7 +460,7 @@ namespace Microsoft.SyndicationFeed.Atom
                     // Handle xhtml content
                     // https://tools.ietf.org/html/rfc4287#section-3.1.1.3
                     //
-                    if (reader.NamespaceURI != AtomConstants.XhmlNamespace)
+                    if (reader.NamespaceURI != AtomConstants.XhtmlNamespace)
                     {
                         throw new FormatException($"Invalid XHTML namespace");
                     }
