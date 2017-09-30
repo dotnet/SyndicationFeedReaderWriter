@@ -78,7 +78,7 @@ namespace Microsoft.SyndicationFeed.Atom
 
         public virtual string FormatValue<T>(T value)
         {
-            return Converter.FormatValue(value);
+            return AtomConverter.FormatValue(value);
         }
 
         public virtual ISyndicationContent CreateContent(ISyndicationLink link)

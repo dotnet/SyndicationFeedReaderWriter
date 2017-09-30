@@ -3,10 +3,11 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Xml;
 
-namespace Microsoft.SyndicationFeed
+namespace Microsoft.SyndicationFeed.Atom
 {
-    static class Converter
+    static class AtomConverter
     {
         public static bool TryParseValue<T>(string value, out T result)
         {
@@ -90,7 +91,7 @@ namespace Microsoft.SyndicationFeed
             if (type == typeof(DateTimeOffset))
             {
                 DateTimeOffset dto = (DateTimeOffset)(object)value;
-                return dto.ToString("r");
+                return XmlConvert.ToString(dto.UtcDateTime, XmlDateTimeSerializationMode.Utc);
             }
 
             //
@@ -98,7 +99,7 @@ namespace Microsoft.SyndicationFeed
             if (type == typeof(DateTime))
             {
                 DateTimeOffset dto = new DateTimeOffset((DateTime)(object)value);
-                return dto.ToString("r");
+                return XmlConvert.ToString(dto.UtcDateTime, XmlDateTimeSerializationMode.Utc);
             }
 
             //

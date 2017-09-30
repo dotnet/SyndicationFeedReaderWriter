@@ -93,7 +93,7 @@ namespace Microsoft.SyndicationFeed.Atom
 
         public virtual bool TryParseValue<T>(string value, out T result)
         {
-            return Converter.TryParseValue<T>(value, out result);
+            return AtomConverter.TryParseValue<T>(value, out result);
         }
 
         public virtual ISyndicationCategory CreateCategory(ISyndicationContent content)

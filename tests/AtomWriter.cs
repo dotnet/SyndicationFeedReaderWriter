@@ -163,7 +163,7 @@ namespace Microsoft.SyndicationFeed.Tests.Atom
             }
 
             string res = sw.ToString();
-            Assert.True(CheckResult(res, $"<entry><id>{entry.Id}</id><title>{entry.Title}</title><updated>{entry.LastUpdated.ToString("r")}</updated><link href=\"{link.Uri}\" /><link title=\"{enclosure.Title}\" href=\"{enclosure.Uri}\" rel=\"{enclosure.RelationshipType}\" type=\"{enclosure.MediaType}\" length=\"{enclosure.Length}\" /><link href=\"{related.Uri}\" rel=\"{related.RelationshipType}\" /><source><title>{source.Title}</title><link href=\"{source.Uri}\" /><updated>{source.LastUpdated.ToString("r")}</updated></source><link href=\"{self.Uri}\" rel=\"{self.RelationshipType}\" /><author><name>{author.Name}</name><email>{author.Email}</email></author><category term=\"{category.Name}\" /><content type=\"{entry.ContentType}\">{entry.Description}</content><summary>{entry.Summary}</summary><rights>{entry.Rights}</rights></entry>"));
+            Assert.True(CheckResult(res, $"<entry><id>{entry.Id}</id><title>{entry.Title}</title><updated>{XmlConvert.ToString(entry.LastUpdated.UtcDateTime, XmlDateTimeSerializationMode.Utc)}</updated><link href=\"{link.Uri}\" /><link title=\"{enclosure.Title}\" href=\"{enclosure.Uri}\" rel=\"{enclosure.RelationshipType}\" type=\"{enclosure.MediaType}\" length=\"{enclosure.Length}\" /><link href=\"{related.Uri}\" rel=\"{related.RelationshipType}\" /><source><title>{source.Title}</title><link href=\"{source.Uri}\" /><updated>{XmlConvert.ToString(source.LastUpdated.UtcDateTime, XmlDateTimeSerializationMode.Utc)}</updated></source><link href=\"{self.Uri}\" rel=\"{self.RelationshipType}\" /><author><name>{author.Name}</name><email>{author.Email}</email></author><category term=\"{category.Name}\" /><content type=\"{entry.ContentType}\">{entry.Description}</content><summary>{entry.Summary}</summary><rights>{entry.Rights}</rights></entry>"));
         }
 
         [Fact]
@@ -187,7 +187,7 @@ namespace Microsoft.SyndicationFeed.Tests.Atom
             }
 
             string res = sw.ToString();
-            Assert.True(CheckResult(res, $"<title>{title}</title><id>{id}</id><updated>{updated.ToString("r")}</updated>"));
+            Assert.True(CheckResult(res, $"<title>{title}</title><id>{id}</id><updated>{XmlConvert.ToString(updated.UtcDateTime, XmlDateTimeSerializationMode.Utc)}</updated>"));
         }
 
         [Fact]
@@ -277,7 +277,7 @@ namespace Microsoft.SyndicationFeed.Tests.Atom
             }
 
             string res = sw.ToString();
-            Assert.True(res.Contains($"<atom:entry><atom:id>{entry.Id}</atom:id><atom:title>{entry.Title}</atom:title><atom:updated>{entry.LastUpdated.ToString("r")}</atom:updated><atom:author><atom:name>{author.Name}</atom:name><atom:email>{author.Email}</atom:email></atom:author><atom:content>{entry.Description}</atom:content></atom:entry>"));
+            Assert.True(res.Contains($"<atom:entry><atom:id>{entry.Id}</atom:id><atom:title>{entry.Title}</atom:title><atom:updated>{XmlConvert.ToString(entry.LastUpdated.UtcDateTime, XmlDateTimeSerializationMode.Utc)}</atom:updated><atom:author><atom:name>{author.Name}</atom:name><atom:email>{author.Email}</atom:email></atom:author><atom:content>{entry.Description}</atom:content></atom:entry>"));
         }
 
         [Fact]
