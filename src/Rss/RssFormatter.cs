@@ -83,7 +83,7 @@ namespace Microsoft.SyndicationFeed.Rss
 
         public virtual string FormatValue<T>(T value)
         {
-            return Converter.FormatValue(value);
+            return RssConverter.FormatValue(value);
         }
 
         public virtual ISyndicationContent CreateContent(ISyndicationLink link)

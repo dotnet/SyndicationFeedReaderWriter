@@ -94,7 +94,7 @@ namespace Microsoft.SyndicationFeed.Rss
 
         public virtual bool TryParseValue<T>(string value, out T result)
         {
-            return Converter.TryParseValue<T>(value, out result);
+            return RssConverter.TryParseValue<T>(value, out result);
         }
 
         public virtual ISyndicationItem CreateItem(ISyndicationContent content)
