@@ -447,7 +447,7 @@ namespace Microsoft.SyndicationFeed.Atom
 
         private void WriteSyndicationContent(ISyndicationContent content)
         {
-            bool isXhtmlContentType = false;
+            string type = null;
 
             //
             // Write Start
@@ -459,9 +459,9 @@ namespace Microsoft.SyndicationFeed.Atom
             {
                 foreach (var a in content.Attributes)
                 {
-                    if (!isXhtmlContentType && a.Name == AtomConstants.Type && a.Value == AtomConstants.XhtmlContentType)
+                    if (type == null && a.Name == AtomConstants.Type)
                     {
-                        isXhtmlContentType = true;
+                        type = a.Value;
                     }
 
                     _writer.WriteSyndicationAttribute(a);
@@ -472,16 +472,22 @@ namespace Microsoft.SyndicationFeed.Atom
             // Write value
             if (content.Value != null)
             {
-                if (isXhtmlContentType)
+                //
+                // Xhtml
+                if (XmlUtils.IsXhtmlMediaType(type))
                 {
-                    //
-                    // Handle xhtml content
-                    // https://tools.ietf.org/html/rfc4287#section-3.1.1.3
-                    //
                     _writer.WriteStartElement("div", AtomConstants.XhtmlNamespace);
                     _writer.WriteXmlFragment(content.Value, AtomConstants.XhtmlNamespace);
                     _writer.WriteEndElement();
                 }
+                //
+                // Xml (applies to <content>)
+                else if (XmlUtils.IsXmlMediaType(type) && content.IsAtom(AtomElementNames.Content))
+                {
+                    _writer.WriteXmlFragment(content.Value, string.Empty);
+                }
+                //
+                // Text/Html
                 else
                 {
                     _writer.WriteString(content.Value);

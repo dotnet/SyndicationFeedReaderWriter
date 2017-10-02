@@ -177,8 +177,8 @@ namespace Microsoft.SyndicationFeed
             {
                 if (_reader.NodeType == XmlNodeType.Element)
                 {
-                    ElementType = MapElementType(_reader.Name);
-                    ElementName = _reader.Name;
+                    ElementType = MapElementType(_reader.LocalName);
+                    ElementName = _reader.LocalName;
 
                     _currentSet = setCurrent;
 

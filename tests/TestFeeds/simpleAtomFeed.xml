@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom" xmlns:xh="http://www.w3.org/1999/xhtml">
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:atom10="http://www.w3.org/2005/Atom">
   <title type="text">dive into mark</title>
   <subtitle type="html">
     A &lt;em&gt;lot&lt;/em&gt; of effort
@@ -13,10 +13,10 @@
   <contributor>
     <name>Sam Ruby</name>
   </contributor>
-  
-  <category term="sports" label="testLabel" scheme="testScheme"/>
-  
-  <icon>/icon.jpg</icon>
+
+  <atom10:category term="sports" label="testLabel" scheme="testScheme"/>
+
+  <atom10:icon>/icon.jpg</atom10:icon>
 
   <logo>/logo.jpg</logo>
   <updated>2005-07-31T12:29:29Z</updated>
@@ -91,12 +91,17 @@
       <name>Joe Gregorio</name>
     </contributor>
     <rights>All rights Reserved. Contoso.</rights>
-    <content type="xhtml" xml:lang="en" xml:base="http://diveintomark.org/">
-      <xh:div>
-        <xh:p>
-          <xh:i>[Update: The Atom draft is finished.]</xh:i>
-        </xh:p>
-      </xh:div>
+    <content type="application/xml" xml:lang="en" xml:base="http://diveintomark.org/">
+      <tag1 xmlns="">
+        <p>
+          <i>[Update: The Atom draft is finished.]</i>
+        </p>
+      </tag1>
+      <tag2 xmlns="">
+        <p>
+          <i>[Update: The Atom draft is finished.]</i>
+        </p>
+      </tag2>
     </content>
   </entry>
 </feed>

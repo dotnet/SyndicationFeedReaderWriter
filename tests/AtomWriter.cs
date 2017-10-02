@@ -300,6 +300,26 @@ namespace Microsoft.SyndicationFeed.Tests.Atom
             Assert.True(CheckResult(res, $"<content type=\"xhtml\"><div xmlns=\"http://www.w3.org/1999/xhtml\">{content}</div></content>"));
         }
 
+        [Fact]
+        public async Task WriteXmlContent()
+        {
+            var sw = new StringWriterWithEncoding(Encoding.UTF8);
+
+            string content = "<h1 xmlns=\"boooo\"><b href=\"foo\">Heading</b><br foo=\"bar\" /></h1><br xmlns=\"\" />";
+
+            using (var xmlWriter = XmlWriter.Create(sw))
+            {
+                var writer = new AtomFeedWriter(xmlWriter);
+
+                await writer.WriteText("content", content, "application/xml");
+
+                await writer.Flush();
+            }
+
+            string res = sw.ToString();
+            Assert.True(CheckResult(res, $"<content type=\"application/xml\">{content}</content>"));
+        }
+
         private static bool CheckResult(string result, string expected)
         {
             return result == $"<?xml version=\"1.0\" encoding=\"utf-8\"?><feed xmlns=\"http://www.w3.org/2005/Atom\">{expected}</feed>";

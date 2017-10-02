@@ -336,7 +336,7 @@ namespace Microsoft.SyndicationFeed.Rss
 
         private static ISyndicationContent ReadSyndicationContent(XmlReader reader)
         {
-            var content = new SyndicationContent(reader.Name, reader.NamespaceURI, null);
+            var content = new SyndicationContent(reader.LocalName, reader.NamespaceURI, null);
 
             //
             // Attributes

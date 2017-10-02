@@ -17,7 +17,7 @@ namespace Microsoft.SyndicationFeed
             }
 
             string ns = reader.NamespaceURI;
-            string name = reader.Name;
+            string name = reader.LocalName;
 
             if (XmlUtils.IsXmlns(name, ns) || XmlUtils.IsXmlSchemaType(name, ns))
             {
@@ -74,13 +74,23 @@ namespace Microsoft.SyndicationFeed
                     // Start Element
                     if (reader.NodeType == XmlNodeType.Element)
                     {
-                        writer.WriteStartElement(reader.LocalName, ns);
+                        if (ns == null)
+                        {
+                            writer.WriteStartElement(reader.LocalName);
+                        }
+                        else
+                        {
+                            writer.WriteStartElement(reader.LocalName, ns);
+                        }
 
                         if (reader.HasAttributes)
                         {
                             while (reader.MoveToNextAttribute())
                             {
-                                writer.WriteAttribute(reader.Prefix, reader.Name, reader.LocalName, ns, reader.Value);
+                                if (!XmlUtils.IsXmlns(reader.Name, reader.Value))
+                                {
+                                    writer.WriteAttribute(reader.Prefix, reader.Name, reader.LocalName, ns, reader.Value);
+                                }
                             }
 
                             reader.MoveToContent();

@@ -60,7 +60,8 @@ namespace Microsoft.SyndicationFeed.Tests.Rss
                         Assert.Equal(fields[3].Attributes.Count(), 1);
                         Assert.False(string.IsNullOrEmpty(fields[3].Value));
 
-                        Assert.Equal("dc:creator", fields[4].Name);
+                        Assert.Equal("creator", fields[4].Name);
+                        Assert.Equal("http://purl.org/dc/elements/1.1/", fields[4].Namespace);
                         Assert.False(string.IsNullOrEmpty(fields[4].Value));
 
                         Assert.Equal("pubDate", fields[5].Name);

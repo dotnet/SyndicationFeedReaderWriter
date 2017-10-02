@@ -161,5 +161,15 @@ namespace Microsoft.SyndicationFeed
         {
             return name == "type" && ns == "http://www.w3.org/2001/XMLSchema-instance";
         }
+
+        public static bool IsXmlMediaType(string value)
+        {
+            return value != null && (value == "xml" || value.EndsWith("/xml") || value.EndsWith("+xml"));
+        }
+
+        public static bool IsXhtmlMediaType(string value)
+        {
+            return value == "xhtml";
+        }
     }
 }
