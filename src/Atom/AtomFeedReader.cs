@@ -49,6 +49,11 @@ namespace Microsoft.SyndicationFeed.Atom
 
         protected override SyndicationElementType MapElementType(string elementName)
         {
+            if (_reader.NamespaceURI != AtomConstants.Atom10Namespace)
+            {
+                return SyndicationElementType.Content;
+            }
+
             switch (elementName)
             {
                 case AtomElementNames.Entry:

@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Xml;
 
@@ -22,7 +23,9 @@ namespace Microsoft.SyndicationFeed.Atom
         public AtomFormatter(IEnumerable<ISyndicationAttribute> knownAttributes, XmlWriterSettings settings)
         {
             _buffer = new StringBuilder();
-            _writer = XmlUtils.CreateXmlWriter(settings?.Clone() ?? new XmlWriterSettings(), knownAttributes, _buffer);
+            _writer = XmlUtils.CreateXmlWriter(settings?.Clone() ?? new XmlWriterSettings(), 
+                                               EnsureAtomNs(knownAttributes ?? Enumerable.Empty<ISyndicationAttribute>()), 
+                                               _buffer);
         }
 
         public string Format(ISyndicationContent content)
@@ -78,7 +81,28 @@ namespace Microsoft.SyndicationFeed.Atom
 
         public virtual string FormatValue<T>(T value)
         {
-            return Converter.FormatValue(value);
+            if (value == null)
+            {
+                return null;
+            }
+
+            Type type = typeof(T);
+
+            //
+            // DateTimeOffset
+            if (type == typeof(DateTimeOffset))
+            {
+                return DateTimeUtils.ToRfc3339String((DateTimeOffset)(object)value);
+            }
+
+            //
+            // DateTime
+            if (type == typeof(DateTime))
+            {
+                return DateTimeUtils.ToRfc3339String(new DateTimeOffset((DateTime)(object)value));
+            }
+
+            return value.ToString();
         }
 
         public virtual ISyndicationContent CreateContent(ISyndicationLink link)
@@ -447,7 +471,7 @@ namespace Microsoft.SyndicationFeed.Atom
 
         private void WriteSyndicationContent(ISyndicationContent content)
         {
-            bool isXhtmlContentType = false;
+            string type = null;
 
             //
             // Write Start
@@ -459,9 +483,9 @@ namespace Microsoft.SyndicationFeed.Atom
             {
                 foreach (var a in content.Attributes)
                 {
-                    if (!isXhtmlContentType && a.Name == AtomConstants.Type && a.Value == AtomConstants.XhtmlContentType)
+                    if (type == null && a.Name == AtomConstants.Type)
                     {
-                        isXhtmlContentType = true;
+                        type = a.Value;
                     }
 
                     _writer.WriteSyndicationAttribute(a);
@@ -472,16 +496,22 @@ namespace Microsoft.SyndicationFeed.Atom
             // Write value
             if (content.Value != null)
             {
-                if (isXhtmlContentType)
+                //
+                // Xhtml
+                if (XmlUtils.IsXhtmlMediaType(type) && content.IsAtom())
                 {
-                    //
-                    // Handle xhtml content
-                    // https://tools.ietf.org/html/rfc4287#section-3.1.1.3
-                    //
                     _writer.WriteStartElement("div", AtomConstants.XhtmlNamespace);
                     _writer.WriteXmlFragment(content.Value, AtomConstants.XhtmlNamespace);
                     _writer.WriteEndElement();
                 }
+                //
+                // Xml (applies to <content>)
+                else if (XmlUtils.IsXmlMediaType(type) && content.IsAtom(AtomElementNames.Content))
+                {
+                    _writer.WriteXmlFragment(content.Value, string.Empty);
+                }
+                //
+                // Text/Html
                 else
                 {
                     _writer.WriteString(content.Value);
@@ -503,6 +533,22 @@ namespace Microsoft.SyndicationFeed.Atom
             //
             // Write End
             _writer.WriteEndElement();
+        }
+
+        private static IEnumerable<ISyndicationAttribute> EnsureAtomNs(IEnumerable<ISyndicationAttribute> attributes)
+        {
+            //
+            // Insert Atom namespace if it doesn't already exist
+            if (!attributes.Any(a => a.Name.StartsWith("xmlns") && 
+                a.Value == AtomConstants.Atom10Namespace))
+            {
+                var list = new List<ISyndicationAttribute>(attributes);
+                list.Insert(0, new SyndicationAttribute("xmlns", AtomConstants.Atom10Namespace));
+
+                attributes = list;
+            }
+
+            return attributes;
         }
     }
 }

@@ -36,6 +36,11 @@ namespace Microsoft.SyndicationFeed.Rss
         
         protected override SyndicationElementType MapElementType(string elementName)
         {
+            if (_reader.NamespaceURI != RssConstants.Rss20Namespace)
+            {
+                return SyndicationElementType.Content;
+            }
+
             switch (elementName)
             {
                 case RssElementNames.Item:
