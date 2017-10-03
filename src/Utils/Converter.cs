@@ -80,30 +80,5 @@ namespace Microsoft.SyndicationFeed
             // Fall back default
             return (result = (T)Convert.ChangeType(value, typeof(T))) != null;
         }
-
-        public static string FormatValue<T>(T value)
-        {
-            Type type = typeof(T);
-            
-            //
-            // DateTimeOffset
-            if (type == typeof(DateTimeOffset))
-            {
-                DateTimeOffset dto = (DateTimeOffset)(object)value;
-                return dto.ToString("r");
-            }
-
-            //
-            // DateTime
-            if (type == typeof(DateTime))
-            {
-                DateTimeOffset dto = new DateTimeOffset((DateTime)(object)value);
-                return dto.ToString("r");
-            }
-
-            //
-            // Default
-            return value.ToString();
-        }
     }
 }

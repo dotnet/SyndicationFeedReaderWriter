@@ -6,6 +6,9 @@ namespace Microsoft.SyndicationFeed
 {
     static class DateTimeUtils
     {
+        private const string Rfc3339LocalDateTimeFormat = "yyyy-MM-ddTHH:mm:sszzz";
+        private const string Rfc3339UTCDateTimeFormat = "yyyy-MM-ddTHH:mm:ssZ";
+
         public static bool TryParseDate(string value, out DateTimeOffset result)
         {
             if(TryParseDateRfc3339(value, out result))
@@ -19,6 +22,23 @@ namespace Microsoft.SyndicationFeed
             }
 
             return false;
+        }
+
+        public static string ToRfc3339String(DateTimeOffset dto)
+        {
+            if (dto.Offset == TimeSpan.Zero)
+            {
+                return dto.ToUniversalTime().ToString(Rfc3339UTCDateTimeFormat, CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                return dto.ToString(Rfc3339LocalDateTimeFormat, CultureInfo.InvariantCulture);
+            }
+        }
+
+        public static string ToRfc1123String(DateTimeOffset dto)
+        {
+            return dto.ToString("r");
         }
 
         private static bool TryParseDateRssSpec(string value, out DateTimeOffset result)

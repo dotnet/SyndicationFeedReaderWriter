@@ -4,6 +4,7 @@
 
 using Microsoft.SyndicationFeed.Atom;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -163,7 +164,7 @@ namespace Microsoft.SyndicationFeed.Tests.Atom
             }
 
             string res = sw.ToString();
-            Assert.True(CheckResult(res, $"<entry><id>{entry.Id}</id><title>{entry.Title}</title><updated>{entry.LastUpdated.ToString("r")}</updated><link href=\"{link.Uri}\" /><link title=\"{enclosure.Title}\" href=\"{enclosure.Uri}\" rel=\"{enclosure.RelationshipType}\" type=\"{enclosure.MediaType}\" length=\"{enclosure.Length}\" /><link href=\"{related.Uri}\" rel=\"{related.RelationshipType}\" /><source><title>{source.Title}</title><link href=\"{source.Uri}\" /><updated>{source.LastUpdated.ToString("r")}</updated></source><link href=\"{self.Uri}\" rel=\"{self.RelationshipType}\" /><author><name>{author.Name}</name><email>{author.Email}</email></author><category term=\"{category.Name}\" /><content type=\"{entry.ContentType}\">{entry.Description}</content><summary>{entry.Summary}</summary><rights>{entry.Rights}</rights></entry>"));
+            Assert.True(CheckResult(res, $"<entry><id>{entry.Id}</id><title>{entry.Title}</title><updated>{entry.LastUpdated.ToRfc3339()}</updated><link href=\"{link.Uri}\" /><link title=\"{enclosure.Title}\" href=\"{enclosure.Uri}\" rel=\"{enclosure.RelationshipType}\" type=\"{enclosure.MediaType}\" length=\"{enclosure.Length}\" /><link href=\"{related.Uri}\" rel=\"{related.RelationshipType}\" /><source><title>{source.Title}</title><link href=\"{source.Uri}\" /><updated>{source.LastUpdated.ToRfc3339()}</updated></source><link href=\"{self.Uri}\" rel=\"{self.RelationshipType}\" /><author><name>{author.Name}</name><email>{author.Email}</email></author><category term=\"{category.Name}\" /><content type=\"{entry.ContentType}\">{entry.Description}</content><summary>{entry.Summary}</summary><rights>{entry.Rights}</rights></entry>"));
         }
 
         [Fact]
@@ -187,7 +188,7 @@ namespace Microsoft.SyndicationFeed.Tests.Atom
             }
 
             string res = sw.ToString();
-            Assert.True(CheckResult(res, $"<title>{title}</title><id>{id}</id><updated>{updated.ToString("r")}</updated>"));
+            Assert.True(CheckResult(res, $"<title>{title}</title><id>{id}</id><updated>{updated.ToRfc3339()}</updated>"));
         }
 
         [Fact]
@@ -277,7 +278,7 @@ namespace Microsoft.SyndicationFeed.Tests.Atom
             }
 
             string res = sw.ToString();
-            Assert.True(res.Contains($"<atom:entry><atom:id>{entry.Id}</atom:id><atom:title>{entry.Title}</atom:title><atom:updated>{entry.LastUpdated.ToString("r")}</atom:updated><atom:author><atom:name>{author.Name}</atom:name><atom:email>{author.Email}</atom:email></atom:author><atom:content>{entry.Description}</atom:content></atom:entry>"));
+            Assert.True(res.Contains($"<atom:entry><atom:id>{entry.Id}</atom:id><atom:title>{entry.Title}</atom:title><atom:updated>{entry.LastUpdated.ToRfc3339()}</atom:updated><atom:author><atom:name>{author.Name}</atom:name><atom:email>{author.Email}</atom:email></atom:author><atom:content>{entry.Description}</atom:content></atom:entry>"));
         }
 
         [Fact]
@@ -343,6 +344,21 @@ namespace Microsoft.SyndicationFeed.Tests.Atom
 
         public override Encoding Encoding {
             get { return _encoding; }
+        }
+    }
+
+    static class DateTimeOffsetExtentions
+    {
+        public static string ToRfc3339(this DateTimeOffset dto)
+        {
+            if (dto.Offset == TimeSpan.Zero)
+            {
+                return dto.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                return dto.ToString("yyyy-MM-ddTHH:mm:sszzz", CultureInfo.InvariantCulture);
+            }
         }
     }
 }

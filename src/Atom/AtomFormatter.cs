@@ -78,7 +78,28 @@ namespace Microsoft.SyndicationFeed.Atom
 
         public virtual string FormatValue<T>(T value)
         {
-            return Converter.FormatValue(value);
+            if (value == null)
+            {
+                return null;
+            }
+
+            Type type = typeof(T);
+
+            //
+            // DateTimeOffset
+            if (type == typeof(DateTimeOffset))
+            {
+                return DateTimeUtils.ToRfc3339String((DateTimeOffset)(object)value);
+            }
+
+            //
+            // DateTime
+            if (type == typeof(DateTime))
+            {
+                return DateTimeUtils.ToRfc3339String(new DateTimeOffset((DateTime)(object)value));
+            }
+
+            return value.ToString();
         }
 
         public virtual ISyndicationContent CreateContent(ISyndicationLink link)

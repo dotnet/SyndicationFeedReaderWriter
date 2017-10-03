@@ -178,7 +178,7 @@ namespace Microsoft.SyndicationFeed.Tests.Rss
             }
 
             string res = sw.ToString();
-            Assert.True(res == $"<?xml version=\"1.0\" encoding=\"utf-8\"?><rss version=\"2.0\"><channel><item><title>First item on ItemWriter</title><link>{url}</link><enclosure url=\"{url}\" length=\"4123\" type=\"audio/mpeg\" /><comments>{url}</comments><source url=\"{url}\">Anonymous Blog</source><guid>{item.Id}</guid><description>Brief description of an item</description><author>person@email.com</author><pubDate>{item.Published.ToString("r")}</pubDate></item></channel></rss>", res);
+            Assert.True(res == $"<?xml version=\"1.0\" encoding=\"utf-8\"?><rss version=\"2.0\"><channel><item><title>First item on ItemWriter</title><link>{url}</link><enclosure url=\"{url}\" length=\"4123\" type=\"audio/mpeg\" /><comments>{url}</comments><source url=\"{url}\">Anonymous Blog</source><guid>{item.Id}</guid><description>Brief description of an item</description><author>person@email.com</author><pubDate>{item.Published.ToRfc1123()}</pubDate></item></channel></rss>", res);
         }
 
         [Fact]
@@ -508,6 +508,14 @@ namespace Microsoft.SyndicationFeed.Tests.Rss
             }
 
             string res = sw.ToString();
+        }
+    }
+
+    static class DateTimeOffsetExtentions
+    {
+        public static string ToRfc1123(this DateTimeOffset dto)
+        {
+            return dto.ToString("r");
         }
     }
 }
