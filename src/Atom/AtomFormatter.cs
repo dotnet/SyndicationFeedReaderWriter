@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Xml;
 
@@ -22,7 +23,9 @@ namespace Microsoft.SyndicationFeed.Atom
         public AtomFormatter(IEnumerable<ISyndicationAttribute> knownAttributes, XmlWriterSettings settings)
         {
             _buffer = new StringBuilder();
-            _writer = XmlUtils.CreateXmlWriter(settings?.Clone() ?? new XmlWriterSettings(), knownAttributes, _buffer);
+            _writer = XmlUtils.CreateXmlWriter(settings?.Clone() ?? new XmlWriterSettings(), 
+                                               EnsureAtomNs(knownAttributes ?? Enumerable.Empty<ISyndicationAttribute>()), 
+                                               _buffer);
         }
 
         public string Format(ISyndicationContent content)
@@ -530,6 +533,22 @@ namespace Microsoft.SyndicationFeed.Atom
             //
             // Write End
             _writer.WriteEndElement();
+        }
+
+        private static IEnumerable<ISyndicationAttribute> EnsureAtomNs(IEnumerable<ISyndicationAttribute> attributes)
+        {
+            //
+            // Insert Atom namespace if it doesn't already exist
+            if (!attributes.Any(a => a.Name.StartsWith("xmlns") && 
+                a.Value == AtomConstants.Atom10Namespace))
+            {
+                var list = new List<ISyndicationAttribute>(attributes);
+                list.Insert(0, new SyndicationAttribute("xmlns", AtomConstants.Atom10Namespace));
+
+                attributes = list;
+            }
+
+            return attributes;
         }
     }
 }
