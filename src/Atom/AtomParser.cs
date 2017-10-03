@@ -436,9 +436,7 @@ namespace Microsoft.SyndicationFeed.Atom
 
                     if (attr != null)
                     {
-                        if (type == null && 
-                            reader.LocalName == AtomConstants.Type &&
-                            AtomAttributeExtentions.IsAtomNamepsace(reader.NamespaceURI))
+                        if (type == null && attr.IsAtom(AtomConstants.Type))
                         {
                             type = attr.Value;
                         }
@@ -471,7 +469,7 @@ namespace Microsoft.SyndicationFeed.Atom
 
                     //
                     // Xhtml
-                    if (XmlUtils.IsXhtmlMediaType(type))
+                    if (XmlUtils.IsXhtmlMediaType(type) && content.IsAtom())
                     {
                         if (reader.NamespaceURI != AtomConstants.XhtmlNamespace)
                         {
@@ -505,27 +503,6 @@ namespace Microsoft.SyndicationFeed.Atom
             }
 
             return content;
-        }
-    }
-
-    static class AtomAttributeExtentions
-    {
-        public static string GetAtom(this IEnumerable<ISyndicationAttribute> attributes, string name)
-        {
-            return attributes.FirstOrDefault(a => a.Name == name && IsAtomNamepsace(a.Namespace))?.Value;
-        }
-
-        public static bool IsAtomNamepsace(string ns)
-        {
-            return ns == null || ns == string.Empty || ns == AtomConstants.Atom10Namespace;
-        }
-    }
-
-    static class AtomContentExtentions
-    {
-        public static bool IsAtom(this ISyndicationContent content, string name)
-        {
-            return content.Name == name && (content.Namespace == null || content.Namespace == AtomConstants.Atom10Namespace);
         }
     }
 }

@@ -495,7 +495,7 @@ namespace Microsoft.SyndicationFeed.Atom
             {
                 //
                 // Xhtml
-                if (XmlUtils.IsXhtmlMediaType(type))
+                if (XmlUtils.IsXhtmlMediaType(type) && content.IsAtom())
                 {
                     _writer.WriteStartElement("div", AtomConstants.XhtmlNamespace);
                     _writer.WriteXmlFragment(content.Value, AtomConstants.XhtmlNamespace);

@@ -282,7 +282,7 @@ namespace Microsoft.SyndicationFeed.Tests.Atom
         }
 
         [Fact]
-        public async Task WriteXhtmlContent()
+        public async Task WriteXhtmlTextConstruct()
         {
             var sw = new StringWriterWithEncoding(Encoding.UTF8);
 
@@ -292,13 +292,13 @@ namespace Microsoft.SyndicationFeed.Tests.Atom
             {
                 var writer = new AtomFeedWriter(xmlWriter);
 
-                await writer.WriteText("content", content, "xhtml");
+                await writer.WriteText("title", content, "xhtml");
 
                 await writer.Flush();
             }
 
             string res = sw.ToString();
-            Assert.True(CheckResult(res, $"<content type=\"xhtml\"><div xmlns=\"http://www.w3.org/1999/xhtml\">{content}</div></content>"));
+            Assert.True(CheckResult(res, $"<title type=\"xhtml\"><div xmlns=\"http://www.w3.org/1999/xhtml\">{content}</div></title>"));
         }
 
         [Fact]
