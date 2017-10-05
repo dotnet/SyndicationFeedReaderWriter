@@ -25,6 +25,8 @@ namespace Microsoft.SyndicationFeed.Rss
             _writer = XmlUtils.CreateXmlWriter(settings?.Clone() ?? new XmlWriterSettings(), knownAttributes, _buffer);
         }
 
+        public bool UseCDATA { get; set; }
+
         public string Format(ISyndicationContent content)
         {
             if (content == null)
@@ -428,7 +430,7 @@ namespace Microsoft.SyndicationFeed.Rss
             // Write value
             if (content.Value != null)
             {
-                _writer.WriteString(content.Value);
+                _writer.WriteString(content.Value, UseCDATA);
             }
             //
             // Write Fields

@@ -226,7 +226,24 @@ namespace Microsoft.SyndicationFeed.Tests.Rss
             var res = sb.ToString();
             Assert.True(res == "<?xml version=\"1.0\" encoding=\"utf-16\"?><rss version=\"2.0\"><channel><CustomTag>Custom Content</CustomTag></channel></rss>");
         }
-        
+
+        [Fact]
+        public async Task WriteCDATAValue()
+        {
+            var sb = new StringBuilder();
+
+            using (var xmlWriter = XmlWriter.Create(sb))
+            {
+                var writer = new RssFeedWriter(xmlWriter, null, new RssFormatter() { UseCDATA = true });
+
+                await writer.WriteTitle("<h1>HTML Title</h1>");
+                await writer.Flush();
+            }
+
+            var res = sb.ToString();
+            Assert.True(res == "<?xml version=\"1.0\" encoding=\"utf-16\"?><rss version=\"2.0\"><channel><title><![CDATA[<h1>HTML Title</h1>]]></title></channel></rss>");
+        }
+
         [Fact]
         public async Task Echo()
         {

@@ -28,6 +28,8 @@ namespace Microsoft.SyndicationFeed.Atom
                                                _buffer);
         }
 
+        public bool UseCDATA { get; set; }
+
         public string Format(ISyndicationContent content)
         {
             if (content == null)
@@ -514,7 +516,7 @@ namespace Microsoft.SyndicationFeed.Atom
                 // Text/Html
                 else
                 {
-                    _writer.WriteString(content.Value);
+                    _writer.WriteString(content.Value, UseCDATA);
                 }
             }
             //

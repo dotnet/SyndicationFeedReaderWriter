@@ -171,5 +171,25 @@ namespace Microsoft.SyndicationFeed
         {
             return value == "xhtml";
         }
+
+        public static bool NeedXmlEscape(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return false;
+            }
+
+            for (int i = 0; i < value.Length; ++i)
+            {
+                char ch = value[i];
+
+                if (ch == '<' || ch == '>' || ch == '&' || char.IsSurrogate(ch))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

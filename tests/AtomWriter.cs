@@ -321,6 +321,25 @@ namespace Microsoft.SyndicationFeed.Tests.Atom
             Assert.True(CheckResult(res, $"<content type=\"application/xml\">{content}</content>"));
         }
 
+        [Fact]
+        public async Task WriteCDATAValue()
+        {
+            var sw = new StringWriterWithEncoding(Encoding.UTF8);
+            string title = "Title & Markup";
+
+            using (var xmlWriter = XmlWriter.Create(sw))
+            {
+                var writer = new AtomFeedWriter(xmlWriter, null, new AtomFormatter() { UseCDATA = true });
+
+                await writer.WriteTitle(title);
+                await writer.Flush();
+            }
+
+            var res = sw.ToString();
+            Assert.True(CheckResult(res, $"<title><![CDATA[{title}]]></title>"));
+        }
+
+
         private static bool CheckResult(string result, string expected)
         {
             return result == $"<?xml version=\"1.0\" encoding=\"utf-8\"?><feed xmlns=\"http://www.w3.org/2005/Atom\">{expected}</feed>";
