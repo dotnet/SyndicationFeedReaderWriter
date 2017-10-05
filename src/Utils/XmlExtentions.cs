@@ -121,6 +121,18 @@ namespace Microsoft.SyndicationFeed
             }
         }
 
+        public static void WriteString(this XmlWriter writer, string value, bool useCDATA)
+        {
+            if (useCDATA && XmlUtils.NeedXmlEscape(value))
+            {
+                writer.WriteCData(value);
+            }
+            else
+            {
+                writer.WriteString(value);
+            }
+        }
+
         private static void WriteAttribute(this XmlWriter writer, string prefix, string name, string localName, string ns, string value)
         {
             prefix = prefix ?? writer.LookupPrefix(ns ?? string.Empty);
