@@ -35,16 +35,23 @@ namespace Microsoft.SyndicationFeed.Tests.Rss
         {
             var sw = new StringWriterWithEncoding(Encoding.UTF8);
 
+            var cat1 = new SyndicationCategory("Test Category 1") {
+                Scheme = "http://example.com/test"
+            };
+
+            var cat2 = new SyndicationCategory("Test Category 2");
+
             using (var xmlWriter = XmlWriter.Create(sw))
             {
                 var writer = new RssFeedWriter(xmlWriter);
 
-                await writer.Write(new SyndicationCategory("Test Category"));
+                await writer.Write(cat1);
+                await writer.Write(cat2);
                 await writer.Flush();
             }
 
             string res = sw.ToString();
-            Assert.True(res == "<?xml version=\"1.0\" encoding=\"utf-8\"?><rss version=\"2.0\"><channel><category>Test Category</category></channel></rss>");
+            Assert.True(res == $"<?xml version=\"1.0\" encoding=\"utf-8\"?><rss version=\"2.0\"><channel><category domain=\"{cat1.Scheme}\">{cat1.Name}</category><category>{cat2.Name}</category></channel></rss>");
         }
 
         [Fact]
@@ -165,6 +172,8 @@ namespace Microsoft.SyndicationFeed.Tests.Rss
 
             item.AddContributor(new SyndicationPerson("person", "person@email.com"));
 
+            item.AddCategory(new SyndicationCategory("Test Category"));
+
             //
             // Write
             var sw = new StringWriterWithEncoding(Encoding.UTF8);
@@ -178,7 +187,7 @@ namespace Microsoft.SyndicationFeed.Tests.Rss
             }
 
             string res = sw.ToString();
-            Assert.True(res == $"<?xml version=\"1.0\" encoding=\"utf-8\"?><rss version=\"2.0\"><channel><item><title>First item on ItemWriter</title><link>{url}</link><enclosure url=\"{url}\" length=\"4123\" type=\"audio/mpeg\" /><comments>{url}</comments><source url=\"{url}\">Anonymous Blog</source><guid>{item.Id}</guid><description>Brief description of an item</description><author>person@email.com</author><pubDate>{item.Published.ToRfc1123()}</pubDate></item></channel></rss>", res);
+            Assert.True(res == $"<?xml version=\"1.0\" encoding=\"utf-8\"?><rss version=\"2.0\"><channel><item><title>First item on ItemWriter</title><link>{url}</link><enclosure url=\"{url}\" length=\"4123\" type=\"audio/mpeg\" /><comments>{url}</comments><source url=\"{url}\">Anonymous Blog</source><guid>{item.Id}</guid><description>Brief description of an item</description><author>person@email.com</author><category>Test Category</category><pubDate>{item.Published.ToRfc1123()}</pubDate></item></channel></rss>", res);
         }
 
         [Fact]

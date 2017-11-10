@@ -13,5 +13,6 @@ namespace Microsoft.SyndicationFeed.Rss
         public const string IsPermaLink = "isPermaLink";
         public const string Length = "length";
         public const string Type = "type";
+        public const string Domain = "domain";
     }
 }

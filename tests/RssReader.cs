@@ -42,10 +42,9 @@ namespace Microsoft.SyndicationFeed.Tests.Rss
 
                         // Read as content
                         ISyndicationContent content = await reader.ReadContent();
-                        //ISyndicationItem item = await reader.ReadItem();
 
                         var fields = content.Fields.ToArray();
-                        Assert.Equal(fields.Length, 6);
+                        Assert.True(fields.Length >= 6);
 
                         Assert.Equal("title", fields[0].Name);
                         Assert.False(string.IsNullOrEmpty(fields[0].Value));
@@ -66,6 +65,49 @@ namespace Microsoft.SyndicationFeed.Tests.Rss
 
                         Assert.Equal("pubDate", fields[5].Name);
                         Assert.False(string.IsNullOrEmpty(fields[5].Value));
+                    }
+                }
+            }
+        }
+
+        [Fact]
+        public async Task ReadCategory()
+        {
+            using (var xmlReader = XmlReader.Create(@"..\..\..\TestFeeds\rss20.xml", new XmlReaderSettings() { Async = true }))
+            {
+                var reader = new RssFeedReader(xmlReader);
+
+                while (await reader.Read())
+                {
+                    if (reader.ElementType == SyndicationElementType.Category)
+                    {
+                        ISyndicationCategory category = await reader.ReadCategory();
+
+                        Assert.True(category.Name == "Newspapers");
+                        Assert.True(category.Scheme == "http://example.com/news");
+                    }
+                }
+            }
+        }
+
+        [Fact]
+        public async Task ReadItemCategory()
+        {
+            using (var xmlReader = XmlReader.Create(@"..\..\..\TestFeeds\rss20.xml", new XmlReaderSettings() { Async = true }))
+            {
+                var reader = new RssFeedReader(xmlReader);
+
+                while (await reader.Read())
+                {
+                    if (reader.ElementType == SyndicationElementType.Item)
+                    {
+                        ISyndicationItem item = await reader.ReadItem();
+
+                        foreach (var c in item.Categories)
+                        {
+                            Assert.True(c.Name == "Newspapers");
+                            Assert.True(c.Scheme == null || c.Scheme == "http://example.com/news/item");
+                        }
                     }
                 }
             }
