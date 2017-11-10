@@ -150,7 +150,14 @@ namespace Microsoft.SyndicationFeed.Rss
                 throw new FormatException("Invalid category name");
             }
 
-            return new SyndicationContent(RssElementNames.Category, category.Name);
+            var content = new SyndicationContent(RssElementNames.Category, category.Name);
+
+            if (category.Scheme != null)
+            {
+                content.AddAttribute(new SyndicationAttribute(RssConstants.Domain, category.Scheme));
+            }
+
+            return content;
         }
 
         public virtual ISyndicationContent CreateContent(ISyndicationPerson person)

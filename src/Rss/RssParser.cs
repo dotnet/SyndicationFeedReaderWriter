@@ -141,6 +141,7 @@ namespace Microsoft.SyndicationFeed.Rss
                     //
                     // Category
                     case RssElementNames.Category:
+                        item.AddCategory(CreateCategory(field));
                         break;
 
                     //
@@ -331,7 +332,9 @@ namespace Microsoft.SyndicationFeed.Rss
                 throw new FormatException("Invalid Rss category name");
             }
 
-            return new SyndicationCategory(content.Value);
+            return new SyndicationCategory(content.Value) {
+                Scheme = content.Attributes.GetRss(RssConstants.Domain)
+            };
         }
 
         private static ISyndicationContent ReadSyndicationContent(XmlReader reader)
