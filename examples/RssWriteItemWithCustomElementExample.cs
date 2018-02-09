@@ -19,7 +19,7 @@ class RssWriteItemWithCustomElement
     public static async Task WriteCustomItem()
     {
         const string ExampleNs = "http://contoso.com/syndication/feed/examples";
-        var sw = new StringWriter();
+        var sw = new StringWriterWithEncoding(Encoding.UTF8);
 
         using (XmlWriter xmlWriter = XmlWriter.Create(sw, new XmlWriterSettings() { Async = true, Indent = true }))
         {
@@ -58,5 +58,19 @@ class RssWriteItemWithCustomElement
         }
 
         Console.WriteLine(sw.ToString());
+    }
+    
+    class StringWriterWithEncoding : StringWriter
+    {
+        private readonly Encoding _encoding;
+
+        public StringWriterWithEncoding(Encoding encoding)
+        {
+            this._encoding = encoding;
+        }
+
+        public override Encoding Encoding {
+            get { return _encoding; }
+        }
     }
 }
