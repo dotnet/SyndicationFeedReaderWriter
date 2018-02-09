@@ -16,7 +16,7 @@ class CreateSimpleRssFeed
 {
     public static async Task WriteFeed()
     {
-        var sw = new StringWriter();
+        var sw = new StringWriterWithEncoding(Encoding.UTF8);
 
         using (XmlWriter xmlWriter = XmlWriter.Create(sw, new XmlWriterSettings() { Async = true , Indent = true }))
         {
@@ -78,5 +78,19 @@ class CreateSimpleRssFeed
         //
         // Ouput the feed
         Console.WriteLine(sw.ToString());
+    }
+    
+    class StringWriterWithEncoding : StringWriter
+    {
+        private readonly Encoding _encoding;
+
+        public StringWriterWithEncoding(Encoding encoding)
+        {
+            this._encoding = encoding;
+        }
+
+        public override Encoding Encoding {
+            get { return _encoding; }
+        }
     }
 }
