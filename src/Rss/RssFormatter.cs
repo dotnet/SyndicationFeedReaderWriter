@@ -174,7 +174,13 @@ namespace Microsoft.SyndicationFeed.Rss
                 throw new ArgumentNullException("Invalid person Email");
             }
 
-            return new SyndicationContent(person.RelationshipType ?? RssElementNames.Author, person.Email);
+            //
+            // Real name recommended with RSS e-mail addresses
+            // Ex: <author>email@address.com (John Doe)</author>
+
+            string value = string.IsNullOrEmpty(person.Name) ? person.Email : $"{person.Email} ({person.Name})";
+
+            return new SyndicationContent(person.RelationshipType ?? RssElementNames.Author, value);
         }
 
         public virtual ISyndicationContent CreateContent(ISyndicationImage image)
