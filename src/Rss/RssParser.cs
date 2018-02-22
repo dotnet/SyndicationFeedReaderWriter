@@ -251,7 +251,30 @@ namespace Microsoft.SyndicationFeed.Rss
                 throw new ArgumentNullException("Content value is required");
             }
 
-            return new SyndicationPerson(null, content.Value, content.Name);
+            //
+            // Handle real name parsing
+            // Ex: <author>abc@def.com (John Doe)</author>
+
+            string email = content.Value;
+            string name = null;
+
+            int nameStart = content.Value.IndexOf('(');
+
+            if (nameStart != -1)
+            {
+                int end = content.Value.IndexOf(')');
+
+                if (end == -1 || end - nameStart - 1 < 0)
+                {
+                    throw new FormatException("Invalid Rss person");
+                }
+
+                email = content.Value.Substring(0, nameStart).Trim();
+
+                name = content.Value.Substring(nameStart + 1, end - nameStart - 1);
+            }
+
+            return new SyndicationPerson(name, email, content.Name);
         }
 
         public virtual ISyndicationImage CreateImage(ISyndicationContent content)
