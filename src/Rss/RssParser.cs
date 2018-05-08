@@ -382,6 +382,21 @@ namespace Microsoft.SyndicationFeed.Rss
             }
 
             //
+            // Body (special case to read XHTML bodies as a value)
+            if (reader.LocalName == RssElementNames.Body)
+            {
+                // Read the OuterXml to make sure the namespace is in scope for nested elements
+                content.Value = reader.ReadOuterXml();
+
+                // Trim the outer <body> element
+                int startIndex = content.Value.IndexOf('>') + 1;
+                int endIndex = content.Value.LastIndexOf('<');
+                content.Value = content.Value.Substring(startIndex, endIndex - startIndex);
+
+                return content;
+            }
+
+            //
             // Content
             if (!reader.IsEmptyElement)
             {
