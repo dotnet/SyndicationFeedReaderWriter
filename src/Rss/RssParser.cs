@@ -108,6 +108,15 @@ namespace Microsoft.SyndicationFeed.Rss
 
             foreach (var field in content.Fields)
             {
+                //
+                // Updated
+                if (field.Namespace == Atom.AtomConstants.Atom10Namespace
+                    && field.Name == RssElementNames.Updated
+                    && TryParseValue(field.Value, out DateTimeOffset updated))
+                {
+                    item.LastUpdated = updated;
+                }
+
                 if (field.Namespace != RssConstants.Rss20Namespace)
                 {
                     continue;
