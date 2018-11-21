@@ -89,7 +89,7 @@ namespace Microsoft.SyndicationFeed.Atom
             }
             else
             {
-                throw new XmlException("Unkown Atom Feed");
+                throw new XmlException("Unknown Atom Feed");
             }
         }
     }
