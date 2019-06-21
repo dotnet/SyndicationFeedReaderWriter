@@ -257,11 +257,14 @@ namespace Microsoft.SyndicationFeed
             
             return false;
         }
-        
+
         private static string RemoveFractionalSeconds(string dateTimeString)
         {
             dateTimeString = dateTimeString.Trim();
 
+            if (dateTimeString.Length < 20 || dateTimeString.IndexOf('.') < 0)
+                return dateTimeString;
+            
             if (dateTimeString[19] == '.')
             {
                 int i = 20;
