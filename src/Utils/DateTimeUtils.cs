@@ -234,18 +234,8 @@ namespace Microsoft.SyndicationFeed
             const string Rfc3339LocalDateTimeFormat = "yyyy-MM-ddTHH:mm:sszzz";
             const string Rfc3339UTCDateTimeFormat = "yyyy-MM-ddTHH:mm:ssZ";
 
-            dateTimeString = dateTimeString.Trim();
-
-            if (dateTimeString[19] == '.')
-            {
-                // remove any fractional seconds, we choose to ignore them
-                int i = 20;
-                while (dateTimeString.Length > i && char.IsDigit(dateTimeString[i]))
-                {
-                    ++i;
-                }
-                dateTimeString = dateTimeString.Substring(0, 19) + dateTimeString.Substring(i);
-            }
+            // remove any fractional seconds, we choose to ignore them
+            dateTimeString = RemoveFractionalSeconds(dateTimeString);
 
             DateTimeOffset localTime;
             if (DateTimeOffset.TryParseExact(dateTimeString, Rfc3339LocalDateTimeFormat,
@@ -255,6 +245,7 @@ namespace Microsoft.SyndicationFeed
                 result = localTime;
                 return true;
             }
+            
             DateTimeOffset utcTime;
             if (DateTimeOffset.TryParseExact(dateTimeString, Rfc3339UTCDateTimeFormat,
                 CultureInfo.InvariantCulture.DateTimeFormat,
@@ -263,7 +254,26 @@ namespace Microsoft.SyndicationFeed
                 result = utcTime;
                 return true;
             }
+            
             return false;
+        }
+        
+        private static string RemoveFractionalSeconds(string dateTimeString)
+        {
+            dateTimeString = dateTimeString.Trim();
+
+            if (dateTimeString[19] == '.')
+            {
+                int i = 20;
+                while (dateTimeString.Length > i && char.IsDigit(dateTimeString[i]))
+                {
+                    ++i;
+                }
+                
+                dateTimeString = dateTimeString.Substring(0, 19) + dateTimeString.Substring(i);
+            }
+
+            return dateTimeString;
         }
     }
 }
