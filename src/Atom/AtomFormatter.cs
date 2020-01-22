@@ -296,26 +296,12 @@ namespace Microsoft.SyndicationFeed.Atom
                 }
             }
 
-            //
-            // author/contributor
-            bool hasAuthor = false;
-
             if (item.Contributors != null)
             {
                 foreach (var c in item.Contributors)
                 {
-                    if (c.RelationshipType == null || c.RelationshipType == AtomContributorTypes.Author)
-                    {
-                        hasAuthor = true;
-                    }
-
                     result.AddField(CreateContent(c));
                 }
-            }
-
-            if (!hasAuthor)
-            {
-                throw new ArgumentException("Author is required");
             }
 
             //
