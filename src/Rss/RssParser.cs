@@ -11,6 +11,11 @@ namespace Microsoft.SyndicationFeed.Rss
 {
     public class RssParser : ISyndicationFeedParser
     {
+        public bool AllowNullLinks { get; set; }
+
+        public RssParser() { }
+        public RssParser(bool AllowNullLinks) => this.AllowNullLinks = AllowNullLinks;
+
         public ISyndicationCategory ParseCategory(string value)
         {
             ISyndicationContent content = ParseContent(value);
@@ -193,6 +198,10 @@ namespace Microsoft.SyndicationFeed.Rss
             }
 
             //
+            // Reserve for possible empty url
+            bool isNullUri = false;
+
+            //
             // Title
             string title = content.Value;
 
@@ -203,19 +212,17 @@ namespace Microsoft.SyndicationFeed.Rss
 
             if (url != null)
             {
-                if (!TryParseValue(url, out uri))
-                {
-                    throw new FormatException("Invalid url attribute");
-                }
+                isNullUri = !TryParseValue(url, out uri);
             }
             else
             {
-                if (!TryParseValue(content.Value, out uri))
-                {
-                    throw new FormatException("Invalid url");
-                }
-
+                isNullUri = !TryParseValue(content.Value, out uri);
                 title = null;
+            }
+
+            if (!AllowNullLinks && isNullUri)
+            {
+                throw new FormatException("Invalid url");
             }
 
             //
