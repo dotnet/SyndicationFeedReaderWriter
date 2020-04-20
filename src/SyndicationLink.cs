@@ -10,7 +10,7 @@ namespace Microsoft.SyndicationFeed
     {
         public SyndicationLink(Uri url, string relationshipType = null)
         {
-            Uri = url ?? throw new ArgumentNullException(nameof(url));
+            Uri = url;
             RelationshipType = relationshipType;
         }
 
