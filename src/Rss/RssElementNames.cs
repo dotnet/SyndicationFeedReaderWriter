@@ -11,6 +11,7 @@ namespace Microsoft.SyndicationFeed.Rss
     public static class RssElementNames
     {
         public const string Author = "author";
+        public const string Body = "body";
         public const string Category = "category";
         public const string Channel = "channel";
         public const string Cloud = "cloud";

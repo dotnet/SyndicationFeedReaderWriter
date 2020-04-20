@@ -167,6 +167,24 @@ namespace Microsoft.SyndicationFeed.Tests.Rss
         }
 
         [Fact]
+        private async Task ReadBody()
+        {
+            using (var xmlReader = XmlReader.Create(@"..\..\..\TestFeeds\RssWithBody.xml", new XmlReaderSettings() { Async = true }))
+            {
+                var reader = new RssFeedReader(xmlReader);
+
+                ISyndicationItem item;
+                while (await reader.Read())
+                {
+                    if(reader.ElementType == SyndicationElementType.Item)
+                    {
+                        item = await reader.ReadItem();
+                    }
+                }
+            }
+        }
+
+        [Fact]
         public static async Task ReadFeedElements()
         {
             var reader = XmlReader.Create(@"..\..\..\TestFeeds\rss20-2items.xml", new XmlReaderSettings() { Async = true });
