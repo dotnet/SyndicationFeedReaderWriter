@@ -65,6 +65,9 @@ namespace Microsoft.SyndicationFeed.Tests.Rss
 
                         Assert.Equal("pubDate", fields[5].Name);
                         Assert.False(string.IsNullOrEmpty(fields[5].Value));
+
+                        Assert.Equal("updated", fields[6].Name);
+                        Assert.False(string.IsNullOrEmpty(fields[6].Value));
                     }
                 }
             }
@@ -211,12 +214,14 @@ namespace Microsoft.SyndicationFeed.Tests.Rss
                                 Assert.True(item.Title == "Lorem ipsum 2017-07-06T20:25:00+00:00");
                                 Assert.True(item.Description == "Exercitation sit dolore mollit et est eiusmod veniam aute officia veniam ipsum.");
                                 Assert.True(item.Links.Count() == 3);
+                                Assert.True(item.LastUpdated.ToString() == "12/6/2017 8:25:00 PM +00:00");
                             }
                             else if(items == 2)
                             {
                                 Assert.True(item.Title == "Lorem ipsum 2017-07-06T20:24:00+00:00");
                                 Assert.True(item.Description == "Do ipsum dolore veniam minim est cillum aliqua ea.");
                                 Assert.True(item.Links.Count() == 3);
+                                Assert.True(item.LastUpdated.ToString() == "12/6/2017 8:25:00 PM +00:00");
                             }
 
                             break;

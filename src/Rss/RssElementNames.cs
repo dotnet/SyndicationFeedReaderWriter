@@ -36,6 +36,7 @@ namespace Microsoft.SyndicationFeed.Rss
         public const string TextInput = "textInput";
         public const string TimeToLive = "ttl";
         public const string Title = "title";
+        public const string Updated = "updated";
         public const string Url = "url";
         public const string Version = "version";
     }

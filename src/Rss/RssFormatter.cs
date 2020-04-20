@@ -308,6 +308,13 @@ namespace Microsoft.SyndicationFeed.Rss
                 content.AddField(new SyndicationContent(RssElementNames.PubDate, FormatValue(item.Published)));
             }
 
+            //
+            // Updated
+            if (item.LastUpdated != DateTimeOffset.MinValue)
+            {
+                content.AddField(new SyndicationContent(RssElementNames.Updated, Atom.AtomConstants.Atom10Namespace, FormatValue(item.LastUpdated)));
+            }
+
             return content;
         }
 
