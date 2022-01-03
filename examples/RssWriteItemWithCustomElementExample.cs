@@ -5,6 +5,7 @@
 using Microsoft.SyndicationFeed;
 using Microsoft.SyndicationFeed.Rss;
 using System;
+using System.Text;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
